@@ -11,6 +11,7 @@ import ProductDetailScreen from '../screens/shop/ProductDetailScreen';
 // Import constants
 import Colors from '../constants/Colors';
 
+
 const Stack = createStackNavigator();
 
 const ProductsNavigator = () => {
@@ -20,6 +21,12 @@ const ProductsNavigator = () => {
       screenOptions={{
         headerStyle: {
           backgroundColor: Platform.OS === 'android' ? Colors.primary : ''
+        },
+        headerTitleStyle: {
+          fontFamily: 'open-sans-bold'
+        },
+        headerBackTitleStyle: {
+          fontFamily: 'open-sans'
         },
         headerTintColor: Platform.OS === 'android' ? 'white' : Colors.primary
       }}

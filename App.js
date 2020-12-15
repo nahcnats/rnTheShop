@@ -1,8 +1,10 @@
 // Import libraries
-import React from 'react';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
+import AppLoading from 'expo-app-loading';
+import * as Font from 'expo-font';
 
 // Import redux reducers
 import productsReducer from './store/reducers/products';
@@ -16,7 +18,25 @@ const rootReducer = combineReducers({
 
 const store = createStore(rootReducer);
 
+const fetchFonts = () => {
+  return Font.loadAsync({
+    'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
+    'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf')
+  });
+}
+
 export default function App() {
+  const [fontLoaded, setFontLoaded] = useState(false);
+
+  if (!fontLoaded) {
+    return <AppLoading startAsync={fetchFonts}
+      onFinish={() => {
+        setFontLoaded(true);
+      }}
+      onError={console.warn}
+    />;
+  }
+
   return (
     <Provider store={store}>
       <ShopNavigator />

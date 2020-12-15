@@ -1,6 +1,6 @@
 // Import libraries
 import React from 'react';
-import { Text, View, FlatList } from 'react-native';
+import { FlatList } from 'react-native';
 import { useSelector } from 'react-redux';
 
 // Import components
