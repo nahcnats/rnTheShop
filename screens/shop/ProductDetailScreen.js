@@ -1,34 +1,40 @@
 // Import libraries
 import React, { useEffect } from 'react';
 import { Text, View, StyleSheet, ScrollView, Image, Button } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 // Import constants
 import Colors from '../../constants/Colors';
+
+// Import redux actions
+import * as cartActions from '../../store/actions/cart';
 
 const ProductDetailScreen = ({ navigation, ...props }) => {
   const { productId, productTitle } = props.route.params;
   // state.products from app.combinedReducers
   const selectedProduct = useSelector(state => state.products.availableProducts.find(prod => prod.id === productId));
+  const dispatch = useDispatch();
 
   useEffect(() => {
     // Mount ProductDetailScreen
 
     // Dynamically set the title header
     navigation.setOptions({
-      title: productTitle
+      headerTitle: productTitle
     });
 
     return () => {
       // unmount
     }
-  }, []); // Excute once
+  }, [navigation]); // Excute once
 
   return (
     <ScrollView>
       <Image style={styles.image} source={{ uri: selectedProduct.imageUrl }} />
       <View style={styles.actions}>
-        <Button color={Colors.primary} title='Add to Cart' onPress={() => {}} />
+        <Button color={Colors.primary} title='Add to Cart' onPress={() => {
+          dispatch(cartActions.addToCart(selectedProduct));
+        }} />
       </View>
       <Text style={styles.price}>${ selectedProduct.price.toFixed(2) }</Text>
       <Text style={styles.description}>{ selectedProduct.description }</Text>
