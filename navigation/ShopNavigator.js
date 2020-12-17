@@ -11,6 +11,7 @@ import ProductsOverviewScreen from '../screens/shop/ProductsOverviewScreen';
 import ProductDetailScreen from '../screens/shop/ProductDetailScreen';
 import CartScreen from '../screens/shop/CartScreen';
 import OrdersScreen from '../screens/shop/OrdersScreen';
+import UserProductsScreen from '../screens/user/UserProductsScreen';
 
 // Import constants
 import Colors from '../constants/Colors';
@@ -71,6 +72,19 @@ const OrdersNavigator = () => {
   );
 }
 
+const AdminNavigator = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={defaultNavOptions}
+    >
+      <Stack.Screen
+        name='UserProductsScreen'
+        component={UserProductsScreen}
+      />
+    </Stack.Navigator>
+  );
+}
+
 const ShopNavigator = () => {
   return (
     <Drawer.Navigator
@@ -96,6 +110,17 @@ const ShopNavigator = () => {
         options={{
           drawerIcon: drawerConfig => <Ionicons
             name={Platform.OS === 'android' ? 'md-list' : 'ios-list'}
+            size={23}
+            color={drawerConfig.activeTintColor}
+          />
+        }}
+      />
+      <Drawer.Screen
+        name="Admin"
+        component={AdminNavigator}
+        options={{
+          drawerIcon: drawerConfig => <Ionicons
+            name={Platform.OS === 'android' ? 'md-create' : 'ios-create'}
             size={23}
             color={drawerConfig.activeTintColor}
           />
