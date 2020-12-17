@@ -33,12 +33,25 @@ const UserProductsScreen = ({navigation, ...props}) => {
           />
         </HeaderButtons>
       ),
+      headerRight: () => (
+        <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+          <Item
+            title='Add'
+            iconName={Platform.OS === 'android' ? 'md-create' : 'ios-create'}
+            onPress={() => {navigation.navigate('EditProductScreen')}}
+          />
+        </HeaderButtons>
+      ),
     });
 
     return () => {
       // unmount
     }
   }, [navigation]); // Excute once
+
+  const editProductHandler = (id) => {
+    navigation.navigate('EditProductScreen', {productId: id});
+  }
 
   return (
     <FlatList
@@ -49,10 +62,12 @@ const UserProductsScreen = ({navigation, ...props}) => {
           image={itemData.item.imageUrl}
           title={itemData.item.title}
           price={itemData.item.price}
-          onSelect={() => {}}
+          onSelect={() => {
+            editProductHandler(itemData.item.id);
+          }}
         >
           <Button color={Colors.primary} title='Edit' onPress={() => {
-
+            editProductHandler(itemData.item.id);
           }} />
           <Button color={Colors.primary} title='Delete' onPress={() => {
             dispatch(productsActions.deleteProduct(itemData.item.id));

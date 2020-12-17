@@ -12,6 +12,7 @@ import ProductDetailScreen from '../screens/shop/ProductDetailScreen';
 import CartScreen from '../screens/shop/CartScreen';
 import OrdersScreen from '../screens/shop/OrdersScreen';
 import UserProductsScreen from '../screens/user/UserProductsScreen';
+import EditProductScreen from '../screens/user/EditProductScreen';
 
 // Import constants
 import Colors from '../constants/Colors';
@@ -62,6 +63,7 @@ const ProductsNavigator = () => {
 const OrdersNavigator = () => {
   return (
     <Stack.Navigator
+      initialRouteName="OrdersScreen"
       screenOptions={defaultNavOptions}
     >
       <Stack.Screen
@@ -75,11 +77,16 @@ const OrdersNavigator = () => {
 const AdminNavigator = () => {
   return (
     <Stack.Navigator
+      initialRouteName="UserProductsScreen"
       screenOptions={defaultNavOptions}
     >
       <Stack.Screen
         name='UserProductsScreen'
         component={UserProductsScreen}
+      />
+      <Stack.Screen
+        name='EditProductScreen'
+        component={EditProductScreen}
       />
     </Stack.Navigator>
   );
