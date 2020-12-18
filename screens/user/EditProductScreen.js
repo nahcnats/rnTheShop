@@ -1,6 +1,6 @@
 // Import libraries
 import React, { useEffect, useLayoutEffect, useState, useCallback } from 'react';
-import { Text, View, TextInput, ScrollView, StyleSheet, Platform, LogBox } from 'react-native';
+import { Text, View, TextInput, ScrollView, StyleSheet, Platform } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -11,10 +11,8 @@ import CustomHeaderButton from '../../components/UI/HeaderButton';
 import * as productActions from '../../store/actions/products';
 
 const EditProductScreen = ({ navigation, ...props }) => {
-  LogBox.ignoreLogs(['Non-serializable values were found in the navigation state.']);
 
   const { prodId } = props.route.params;
-  const { submit } = props.route.params;
 
   const editedProduct = useSelector(
     state => state.products.userProducts.find(prod => prod.id === prodId)
@@ -36,7 +34,7 @@ const EditProductScreen = ({ navigation, ...props }) => {
             <Item
               title='Add'
               iconName={Platform.OS === 'android' ? 'md-checkmark' : 'ios-checkmark'}
-              onPress={submit}
+              onPress={submitHandler}
             />
           </HeaderButtons>
         )
@@ -44,6 +42,7 @@ const EditProductScreen = ({ navigation, ...props }) => {
     });
   });
 
+  // The use of useCallback is to avoid infinate loop from useLayoutEffect when calling onPress
   const submitHandler = useCallback(() => {
     if (editedProduct) {
       dispatch(productActions.updateProduct(prodId, title, description, imageUrl));
@@ -53,13 +52,7 @@ const EditProductScreen = ({ navigation, ...props }) => {
 
     navigation.goBack();
 
-  }, [dispatch, prodId, title, description, imageUrl, price]);
-
-  useEffect(() => {
-    // Mount EditProductScreen
-    navigation.setParams({ submit: submitHandler });
-
-  }, [submitHandler]); // Excute whenever submitHandler invoke
+  }, [dispatch, prodId, title, description, imageUrl, price]); // Invoke only if prodId, title, decriptions, imageUrl, price changes
 
   return (
     <ScrollView>
