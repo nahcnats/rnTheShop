@@ -1,5 +1,5 @@
 // Import libraries
-import React, { useEffect } from 'react';
+import React, { useLayoutEffect } from 'react';
 import { FlatList, Text, Platform } from 'react-native';
 import { useSelector } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
@@ -12,7 +12,7 @@ const OrdersScreen = ({navigation, ...props}) => {
   // state.orders from app.combinedReducers
   const orders = useSelector(state => state.order.orders);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     // Mount OrdersScreen
 
     // Dynamically set the title header
@@ -29,10 +29,7 @@ const OrdersScreen = ({navigation, ...props}) => {
       ),
     });
 
-    return () => {
-      // unmount
-    }
-  }, [navigation]); // Excute once
+  }, [navigation]); // Excute when navigation invoke
 
   return <FlatList
     data={orders}

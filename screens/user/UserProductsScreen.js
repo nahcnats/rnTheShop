@@ -1,6 +1,6 @@
 // Import libraries
-import React, { useEffect } from 'react';
-import { FlatList, StyleSheet, Platform, Button } from 'react-native';
+import React, { useLayoutEffect } from 'react';
+import { FlatList, Platform, Button } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 
@@ -18,7 +18,7 @@ const UserProductsScreen = ({navigation, ...props}) => {
   const userProducts = useSelector(state => state.products.userProducts);
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     // Mount UserProductsScreen
 
     // Dynamically set the title header
@@ -38,19 +38,18 @@ const UserProductsScreen = ({navigation, ...props}) => {
           <Item
             title='Add'
             iconName={Platform.OS === 'android' ? 'md-create' : 'ios-create'}
-            onPress={() => {navigation.navigate('EditProductScreen')}}
+            onPress={() => {
+              navigation.navigate('EditProductScreen', { prodId: null });
+            }}
           />
         </HeaderButtons>
       ),
     });
 
-    return () => {
-      // unmount
-    }
   }, [navigation]); // Excute once
 
   const editProductHandler = (id) => {
-    navigation.navigate('EditProductScreen', {productId: id});
+    navigation.navigate('EditProductScreen', {prodId: id});
   }
 
   return (
@@ -77,9 +76,5 @@ const UserProductsScreen = ({navigation, ...props}) => {
     />
   );
 }
-
-const styles = StyleSheet.create({
-
-});
 
 export default UserProductsScreen;

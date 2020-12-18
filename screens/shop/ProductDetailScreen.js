@@ -1,5 +1,5 @@
 // Import libraries
-import React, { useEffect } from 'react';
+import React, { useLayoutEffect } from 'react';
 import { Text, View, StyleSheet, ScrollView, Image, Button } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -15,7 +15,7 @@ const ProductDetailScreen = ({ navigation, ...props }) => {
   const selectedProduct = useSelector(state => state.products.availableProducts.find(prod => prod.id === productId));
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     // Mount ProductDetailScreen
 
     // Dynamically set the title header
@@ -23,10 +23,7 @@ const ProductDetailScreen = ({ navigation, ...props }) => {
       headerTitle: productTitle
     });
 
-    return () => {
-      // unmount
-    }
-  }, [navigation]); // Excute once
+  }, [navigation]); // Excute when navigation invoke
 
   return (
     <ScrollView>

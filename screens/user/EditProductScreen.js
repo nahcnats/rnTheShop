@@ -1,65 +1,65 @@
 // Import libraries
-import React, { useEffect, useState, useCallback } from 'react';
-import { Text, View, TextInput, ScrollView, StyleSheet, Platform } from 'react-native';
+import React, { useEffect, useLayoutEffect, useState, useCallback } from 'react';
+import { Text, View, TextInput, ScrollView, StyleSheet, Platform, LogBox } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 // Import components
 import CustomHeaderButton from '../../components/UI/HeaderButton';
 
+// Import actions
+import * as productActions from '../../store/actions/products';
+
 const EditProductScreen = ({ navigation, ...props }) => {
-  // Use params if exits, otherwise make it null
-  const { productId } = props.route.params ?? {};
-  const { submit } = props.route.params ?? {};
+  LogBox.ignoreLogs(['Non-serializable values were found in the navigation state.']);
+
+  const { prodId } = props.route.params;
+  const { submit } = props.route.params;
 
   const editedProduct = useSelector(
-    state => state.products.userProducts.find(prod => prod.id === productId)
+    state => state.products.userProducts.find(prod => prod.id === prodId)
   );
-  const [title, setTitle] = useState(editedProduct ? editedProduct.title: '');
-  const [imageUrl, setImageUrl] = useState(editedProduct ? editedProduct.imageUrl: '');
+  const [title, setTitle] = useState(editedProduct ? editedProduct.title : '');
+  const [imageUrl, setImageUrl] = useState(editedProduct ? editedProduct.imageUrl : '');
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState(editedProduct ? editedProduct.description : '');
-  const [theParam, setTheParam] = useState();
+
+  const dispatch = useDispatch();
+
+  useLayoutEffect(() => {
+    // Dynamically set the title header
+    navigation.setOptions({
+      headerTitle: prodId ? 'Edit Product' : 'Add Product',
+      headerRight: () => {
+        return (
+          <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+            <Item
+              title='Add'
+              iconName={Platform.OS === 'android' ? 'md-checkmark' : 'ios-checkmark'}
+              onPress={submit}
+            />
+          </HeaderButtons>
+        )
+      },
+    });
+  });
+
+  const submitHandler = useCallback(() => {
+    if (editedProduct) {
+      dispatch(productActions.updateProduct(prodId, title, description, imageUrl));
+    } else {
+      dispatch(productActions.createProduct(title, description, imageUrl, +price));
+    }
+
+    navigation.goBack();
+
+  }, [dispatch, prodId, title, description, imageUrl, price]);
 
   useEffect(() => {
     // Mount EditProductScreen
-
-    const submitFn = () => {
-      setTheParam(submit);
-    }
-
-    // Dynamically set the title header
-    navigation.setOptions({
-      headerTitle: productId ? 'Edit Product' : 'Add Product',
-      headerRight: () => (
-        <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-          <Item
-            title='Add'
-            iconName={Platform.OS === 'android' ? 'md-checkmark' : 'ios-checkmark'}
-            onPress={submitFn}
-          />
-        </HeaderButtons>
-      ),
-    });
-
     navigation.setParams({ submit: submitHandler });
 
-    return () => {
-      // unmount
-    }
-  }, [submitHandler]); // Excute once
-
-  // useEffect(() => {
-  //   navigation.setParams({ submit: submitHandler });
-
-  //   return () => {
-  //     // unmount
-  //   }
-  // }, [submitHandler]);
-
-  const submitHandler = useCallback(() => {
-    console.log('Submitting');
-  }, []);
+  }, [submitHandler]); // Excute whenever submitHandler invoke
 
   return (
     <ScrollView>

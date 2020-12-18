@@ -1,5 +1,5 @@
 // Import libraries
-import React, { useEffect } from 'react';
+import React, { useLayoutEffect } from 'react';
 import { Text, View, FlatList, StyleSheet, Button } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -33,7 +33,7 @@ const CartScreen = ({ navigation, ...props }) => {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     // Mount CartScreen
 
     // Dynamically set the title header
@@ -41,10 +41,7 @@ const CartScreen = ({ navigation, ...props }) => {
       headerTitle: 'Your Cart'
     });
 
-    return () => {
-      // unmount
-    }
-  }, [navigation]); // Excute once
+  }, [navigation]); // Excute when navigation invoke
   
   return (
     <View style={styles.screen}>

@@ -1,5 +1,5 @@
 // Import libraries
-import React, { useEffect } from 'react';
+import React, { useLayoutEffect } from 'react';
 import { FlatList, Platform, Button } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
@@ -19,7 +19,7 @@ const ProductsOverviewScreen = ({ navigation, ...props}) => {
   const products = useSelector(state => state.products.availableProducts);
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     // Mount ProductOverviewScreen
 
     // Dynamically set the title header
@@ -45,10 +45,7 @@ const ProductsOverviewScreen = ({ navigation, ...props}) => {
       ),
     });
 
-    return () => {
-      // unmount
-    }
-  }, [navigation]); // Excute once
+  }, [navigation]); // Excute when navigation invoke
 
   const selectItemHandler = (id, title) => {
     navigation.navigate('ProductDetailScreen', {
