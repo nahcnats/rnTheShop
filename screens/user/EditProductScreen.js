@@ -1,5 +1,5 @@
 // Import libraries
-import React, { useEffect, useLayoutEffect, useState, useCallback } from 'react';
+import React, { useLayoutEffect, useState, useCallback } from 'react';
 import { Text, View, TextInput, ScrollView, StyleSheet, Platform } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useSelector, useDispatch } from 'react-redux';
