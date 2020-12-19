@@ -19,6 +19,8 @@ const ProductsOverviewScreen = ({ navigation, ...props}) => {
   const products = useSelector(state => state.products.availableProducts);
   const dispatch = useDispatch();
 
+  // useLayoutEffect to do repaint layout related changes. Keep it separate from useEffect
+  // for state changes.
   useLayoutEffect(() => {
     // Mount ProductOverviewScreen
 

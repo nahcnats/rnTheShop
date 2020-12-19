@@ -34,6 +34,8 @@ const CartScreen = ({ navigation, ...props }) => {
 
   const dispatch = useDispatch();
 
+  // useLayoutEffect to do repaint layout related changes. Keep it separate from useEffect
+  // for state changes.
   useLayoutEffect(() => {
     // Mount CartScreen
 

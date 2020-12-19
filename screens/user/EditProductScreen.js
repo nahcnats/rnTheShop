@@ -64,6 +64,8 @@ const EditProductScreen = ({ navigation, ...props }) => {
     formIsValid: editedProduct ? true : false
   });
 
+  // useLayoutEffect to do repaint layout related changes. Keep it separate from useEffect
+  // for state changes.
   useLayoutEffect(() => {
     // Dynamically set the title header
     navigation.setOptions({
@@ -82,7 +84,8 @@ const EditProductScreen = ({ navigation, ...props }) => {
     });
   });
 
-  // The use of useCallback is to avoid infinate loop from useLayoutEffect when calling onPress
+  // useCallBack return a memoized version of the callback that only changes if one 
+  // dependencies has changed.
   const submitHandler = useCallback(() => {
     if (!formState.formIsValid) {
       Alert.alert('Wrong input!', 'Please check the errors in the form.', [
@@ -120,7 +123,7 @@ const EditProductScreen = ({ navigation, ...props }) => {
         input: inputIdentifier
       });
     },
-    [dispatchFormState]
+    [dispatchFormState] // Invoke only is dispatchFormState is called
   );
 
   return (
@@ -132,17 +135,17 @@ const EditProductScreen = ({ navigation, ...props }) => {
       <ScrollView>
         <View style={styles.form}>
           <Input
-            id='title'
-            label='Title'
-            errorText='Please enter a valid title!'
+            id='title'  // custom props from Input
+            label='Title' // custom props from Input
+            errorText='Please enter a valid title!' // custom props from Input
             keyboardType='default'
             autoCapitalize='sentences'
             autoCorrect
             returnKeyType='next'
-            onInputChange={inputChangeHandler}
-            initialValue={editedProduct ? editedProduct.title : ''}
-            initialValid={!!editedProduct}
-            required
+            onInputChange={inputChangeHandler} // custom props from Input
+            initialValue={editedProduct ? editedProduct.title : ''} // custom props from Input
+            initialValid={!!editedProduct} // custom props from Input
+            required // custom props from Input
           />
           <Input
             id='imageUrl'
@@ -157,6 +160,7 @@ const EditProductScreen = ({ navigation, ...props }) => {
             required
           />
           {
+            // render only if this is in edit mode
             editedProduct ? null :
               <Input
                 id='price'

@@ -25,6 +25,7 @@ const inputReducer = (state, action) => {
 }
 
 const Input = props => {
+  // useReducer is local reducer provided by RN, != as redux (global)
   const [inputState, dispatch] = useReducer(inputReducer, {
     value: props.initialValue ? props.initialValue : '',
     isValid: props.initialValid,
@@ -37,7 +38,7 @@ const Input = props => {
     if (inputState.touched) {
       onInputChange(id, inputState.value, inputState.isValid);
     }
-  }, [inputState, onInputChange, id]); // Invoke if there's inputChange onInputChange, id
+  }, [inputState, onInputChange, id]); // Invoke if there's changes in inputChange onInputChange, id
 
   const textChangeHandler = text => {
     const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

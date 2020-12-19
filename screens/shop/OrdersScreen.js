@@ -12,6 +12,8 @@ const OrdersScreen = ({navigation, ...props}) => {
   // state.orders from app.combinedReducers
   const orders = useSelector(state => state.order.orders);
 
+  // useLayoutEffect to do repaint layout related changes. Keep it separate from useEffect
+  // for state changes.
   useLayoutEffect(() => {
     // Mount OrdersScreen
 

@@ -15,6 +15,8 @@ const ProductDetailScreen = ({ navigation, ...props }) => {
   const selectedProduct = useSelector(state => state.products.availableProducts.find(prod => prod.id === productId));
   const dispatch = useDispatch();
 
+  // useLayoutEffect to do repaint layout related changes. Keep it separate from useEffect
+  // for state changes.
   useLayoutEffect(() => {
     // Mount ProductDetailScreen
 
