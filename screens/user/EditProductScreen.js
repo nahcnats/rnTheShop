@@ -48,6 +48,7 @@ const EditProductScreen = ({ navigation, ...props }) => {
 
   const dispatch = useDispatch();
 
+  // useReducer is local reducer provided by RN, != as redux (global)
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
       title: editedProduct ? editedProduct.title : '',
@@ -84,6 +85,18 @@ const EditProductScreen = ({ navigation, ...props }) => {
     });
   });
 
+  const inputChangeHandler = useCallback(
+    (inputIdentifier, inputValue, inputValidity) => {
+      dispatchFormState({
+        type: FORM_INPUT_UPDATE,
+        value: inputValue,
+        isValid: inputValidity,
+        input: inputIdentifier
+      });
+    },
+    [dispatchFormState] // Invoke only is dispatchFormState is called
+  );
+
   // useCallBack return a memoized version of the callback that only changes if one 
   // dependencies has changed.
   const submitHandler = useCallback(() => {
@@ -113,18 +126,6 @@ const EditProductScreen = ({ navigation, ...props }) => {
     navigation.goBack();
 
   }, [dispatch, prodId, formState]); // Invoke only if prodId, title, decriptions, imageUrl, price changes
-
-  const inputChangeHandler = useCallback(
-    (inputIdentifier, inputValue, inputValidity) => {
-      dispatchFormState({
-        type: FORM_INPUT_UPDATE,
-        value: inputValue,
-        isValid: inputValidity,
-        input: inputIdentifier
-      });
-    },
-    [dispatchFormState] // Invoke only is dispatchFormState is called
-  );
 
   return (
     <KeyboardAvoidingView
