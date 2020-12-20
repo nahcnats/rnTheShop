@@ -55,7 +55,7 @@ const UserProductsScreen = ({navigation, ...props}) => {
   }
 
   const deleteHandler = (title, id) => {
-    Alert.alert('Are you sure?', `Do you really want to delete ${title}?`,
+    Alert.alert('Delete Product', `Do you really want to delete ${title}?`,
       [
         { text: 'No', style: 'default' },
         { text: 'Yes', style: 'destructive', onPress: () => {

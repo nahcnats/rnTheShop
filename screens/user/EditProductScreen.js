@@ -1,12 +1,20 @@
 // Import libraries
-import React, { useLayoutEffect, useCallback, useReducer } from 'react';
-import { View, ScrollView, StyleSheet, Platform, Alert, KeyboardAvoidingView } from 'react-native';
+import React, { useLayoutEffect, useCallback, useReducer, useState, useEffect } from 'react';
+import {
+  View,
+  ScrollView,
+  StyleSheet,
+  Platform,
+  Alert,
+  KeyboardAvoidingView
+} from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useSelector, useDispatch } from 'react-redux';
 
 // Import components
 import CustomHeaderButton from '../../components/UI/HeaderButton';
 import Input from '../../components/UI/Input';
+import Loading from '../../components/UI/Loading';
 
 // Import actions
 import * as productActions from '../../store/actions/products';
@@ -41,6 +49,8 @@ const formReducer = (state, action) => {
 }
 
 const EditProductScreen = ({ navigation, ...props }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
   const { prodId } = props.route.params;
   const editedProduct = useSelector(
     state => state.products.userProducts.find(prod => prod.id === prodId)
@@ -85,6 +95,12 @@ const EditProductScreen = ({ navigation, ...props }) => {
     });
   });
 
+  useEffect(() => {
+    if (error) {
+      Alert.alert('An error occured!', error, [{ text: 'OK' }]);
+    }
+  }, [error]);
+
   const inputChangeHandler = useCallback(
     (inputIdentifier, inputValue, inputValidity) => {
       dispatchFormState({
@@ -99,7 +115,7 @@ const EditProductScreen = ({ navigation, ...props }) => {
 
   // useCallBack return a memoized version of the callback that only changes if one 
   // dependencies has changed.
-  const submitHandler = useCallback(() => {
+  const submitHandler = useCallback(async () => {
     if (!formState.formIsValid) {
       Alert.alert('Wrong input!', 'Please check the errors in the form.', [
         { text: 'OK' }
@@ -107,25 +123,37 @@ const EditProductScreen = ({ navigation, ...props }) => {
       return;
     }
 
-    if (editedProduct) {
-      dispatch(productActions.updateProduct(
-        prodId,
-        formState.inputValues.title,
-        formState.inputValues.description,
-        formState.inputValues.imageUrl)
-      );
-    } else {
-      dispatch(productActions.createProduct(
-        formState.inputValues.title,
-        formState.inputValues.description,
-        formState.inputValues.imageUrl,
-        +formState.inputValues.price)
-      );
+    setError(null);
+    setIsLoading(true);
+
+    try {
+      if (editedProduct) {
+        await dispatch(productActions.updateProduct(
+          prodId,
+          formState.inputValues.title,
+          formState.inputValues.description,
+          formState.inputValues.imageUrl)
+        );
+      } else {
+        await dispatch(productActions.createProduct(
+          formState.inputValues.title,
+          formState.inputValues.description,
+          formState.inputValues.imageUrl,
+          +formState.inputValues.price)
+        );
+      }
+
+      navigation.goBack();
+    } catch (err) {
+      setError(err.message);
     }
-
-    navigation.goBack();
-
+    
+    setIsLoading(false);
   }, [dispatch, prodId, formState]); // Invoke only if prodId, title, decriptions, imageUrl, price changes
+
+  if (isLoading) {
+    return <Loading />
+  }
 
   return (
     <KeyboardAvoidingView
@@ -198,7 +226,7 @@ const EditProductScreen = ({ navigation, ...props }) => {
 const styles = StyleSheet.create({
   form: {
     margin: 20
-  }
+  },
 });
 
 export default EditProductScreen;

@@ -1,7 +1,7 @@
 // Import libraries
 import React, { useState } from 'react';
-import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import { createStore, combineReducers } from 'redux';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import ReduxThunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import AppLoading from 'expo-app-loading';
 import * as Font from 'expo-font';
@@ -23,7 +23,11 @@ const rootReducer = combineReducers({
 });
 
 // TODO: Remove composeWithDevTools before production deployment
-const store = createStore(rootReducer /*, composeWithDevTools()*/);
+const store = createStore(
+  rootReducer,
+  applyMiddleware(ReduxThunk)
+  /*, composeWithDevTools()*/
+);
 
 const fetchFonts = () => {
   return Font.loadAsync({

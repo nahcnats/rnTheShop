@@ -30,7 +30,7 @@ const OrderItem = props => {
             {props.items.map(cartItem => (
               <CartItem
                 key={cartItem.productId}
-                quatity={cartItem.quatity}
+                quantity={cartItem.quantity}
                 amount={cartItem.sum}  
                 title={cartItem.productTitle} />
             ))}
