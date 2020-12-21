@@ -27,11 +27,10 @@ import formReducer from '../../components/util/formReducer';
 
 // Import constants
 import Colors from '../../constants/Colors';
+import {FORM_INPUT_UPDATE} from '../../constants/actionType';
 
 // Import actions
 import * as authActions from '../../store/actions/auth';
-
-const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
 const AuthScreen = ({ navigation, ...props }) => {
   const [isSignUp, setIsSignUp] = useState(false);

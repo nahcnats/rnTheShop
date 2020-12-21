@@ -19,10 +19,11 @@ import Loading from '../../components/UI/Loading';
 // Import utils
 import formReducer from '../../components/util/formReducer';
 
+// Import constants
+import {FORM_INPUT_UPDATE} from '../../constants/actionType';
+
 // Import actions
 import * as productActions from '../../store/actions/products';
-
-const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
 const EditProductScreen = ({ navigation, ...props }) => {
   const [isLoading, setIsLoading] = useState(false);

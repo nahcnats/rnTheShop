@@ -1,4 +1,4 @@
-const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
+import {FORM_INPUT_UPDATE} from '../../constants/actionType';
 
 const formReducer = (state, action) => {
   if (action.type === FORM_INPUT_UPDATE) {

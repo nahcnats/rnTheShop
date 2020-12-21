@@ -12,7 +12,8 @@ import * as cartActions from '../../store/actions/cart';
 const ProductDetailScreen = ({ navigation, ...props }) => {
   const { productId, productTitle } = props.route.params;
   // state.products from app.combinedReducers
-  const selectedProduct = useSelector(state => state.products.availableProducts.find(prod => prod.id === productId));
+  const selectedProduct = useSelector(
+    state => state.products.availableProducts.find(prod => prod.id === productId));
   const dispatch = useDispatch();
 
   // useLayoutEffect to do repaint layout related changes. Keep it separate from useEffect
