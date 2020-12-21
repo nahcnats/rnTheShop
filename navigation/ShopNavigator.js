@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useSelector } from 'react-redux';
 
 // Import screens
 import ProductsOverviewScreen from '../screens/shop/ProductsOverviewScreen';
@@ -13,6 +14,7 @@ import CartScreen from '../screens/shop/CartScreen';
 import OrdersScreen from '../screens/shop/OrdersScreen';
 import UserProductsScreen from '../screens/user/UserProductsScreen';
 import EditProductScreen from '../screens/user/EditProductScreen';
+import AuthScreen from '../screens/user/AuthScreen';
 
 // Import constants
 import Colors from '../constants/Colors';
@@ -92,6 +94,21 @@ const AdminNavigator = () => {
   );
 }
 
+const AuthNavigator = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="AuthScreen"
+      screenOptions={defaultNavOptions}
+    >
+      <Stack.Screen
+        name="AuthScreen"
+        component={AuthScreen}
+      />
+
+    </Stack.Navigator>
+  )
+}
+
 const ShopNavigator = () => {
   return (
     <Drawer.Navigator
@@ -138,9 +155,11 @@ const ShopNavigator = () => {
 }
 
 const AppNavigator = () => {
+  const isLoggedIn = useSelector(state => state.auth.loggedIn);
+
   return (
     <NavigationContainer>
-      <ShopNavigator />
+      {isLoggedIn ? <ShopNavigator /> : <AuthNavigator />}
     </NavigationContainer>
   )
 }

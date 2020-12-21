@@ -16,37 +16,13 @@ import CustomHeaderButton from '../../components/UI/HeaderButton';
 import Input from '../../components/UI/Input';
 import Loading from '../../components/UI/Loading';
 
+// Import utils
+import formReducer from '../../components/util/formReducer';
+
 // Import actions
 import * as productActions from '../../store/actions/products';
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
-
-const formReducer = (state, action) => {
-  if (action.type === FORM_INPUT_UPDATE) {
-    const updatedValues = {
-      ...state.inputValues,
-      [action.input]: action.value
-    };
-
-    const updateValidities = {
-      ...state.inputValidities,
-      [action.input]: action.isValid
-    };
-
-    let updatedFormIsValid = true;
-    for (const key in updateValidities) {
-      updatedFormIsValid = updatedFormIsValid && updateValidities[key];
-    }
-
-    return {
-      formIsValid: updatedFormIsValid,
-      inputValues: updatedValues,
-      inputValidities: updateValidities,
-    }
-  }
-
-  return state;
-}
 
 const EditProductScreen = ({ navigation, ...props }) => {
   const [isLoading, setIsLoading] = useState(false);

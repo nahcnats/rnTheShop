@@ -12,6 +12,7 @@ import * as Font from 'expo-font';
 import productsReducer from './store/reducers/products';
 import cartReducer from './store/reducers/cart';
 import ordersReducer from './store/reducers/orders';
+import authReducer from './store/reducers/auth';
 
 // Import navigation
 import ShopNavigator from './navigation/ShopNavigator'
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
   products: productsReducer,
   cart: cartReducer,
   order: ordersReducer,
+  auth: authReducer
 });
 
 // TODO: Remove composeWithDevTools before production deployment

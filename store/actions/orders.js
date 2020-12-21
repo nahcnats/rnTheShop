@@ -11,9 +11,11 @@ export const ADD_ORDER = 'ADD_ORDER';
 export const SET_ORDERS = 'SET_ORDERS';
 
 export const fetchOrders = () => {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     try {
-      const response = await axios.get(`${API.apiUrl}/orders/u1.json`);
+      const userId = getState().auth.userId;
+
+      const response = await axios.get(`${API.apiUrl}/orders/${userId}.json`);
 
       if (!response.status === 200) {
         throw new Error('Something when wrong!');
@@ -39,8 +41,10 @@ export const fetchOrders = () => {
 }
 
 export const addOrder = (cartItems, totalAmount) => {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     const date = new Date();
+    const token = getState().auth.token;
+    const userId = getState().auth.userId;
     
     const payload = {
       cartItems,
@@ -48,7 +52,7 @@ export const addOrder = (cartItems, totalAmount) => {
       date: date.toISOString()
     };
 
-    const response = await axios.post(`${API.apiUrl}/orders/u1.json`,
+    const response = await axios.post(`${API.apiUrl}/orders/${userId}.json?auth=${token}`,
       payload,
       API.options
     );
