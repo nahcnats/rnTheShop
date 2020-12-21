@@ -1,11 +1,11 @@
 // Import libraries
-import React from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useSelector } from 'react-redux';
+import AsyncStorage from '@react-native-community/async-storage';
 
 // Import screens
 import ProductsOverviewScreen from '../screens/shop/ProductsOverviewScreen';
@@ -155,7 +155,32 @@ const ShopNavigator = () => {
 }
 
 const AppNavigator = () => {
-  const isLoggedIn = useSelector(state => state.auth.loggedIn);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  /* 
+    For persistence authentication.
+    AppNavigator cannot be set as async.
+    Hence, need to wrap async function for tryLogin as callback to avoid infinate loop.
+  */
+  const tryLogin = useCallback( async () => {
+    const userData = await AsyncStorage.getItem('userData');
+
+    // If no userData, return. Hence, isLoggedIn is still false
+    if (!userData) {
+      return;
+    }
+
+    // AsyncStorage values are string. Covert string to JSON
+    const transformedData = JSON.parse(userData);
+
+    if (transformedData.expiryDate >= new Date() || transformedData.token || transformedData.userId) {
+      setIsLoggedIn(true);
+    }
+
+    return; // Stop processing, return to original state. Hence, isLoggedIn is still false
+  }, [isLoggedIn]); // Execute whenever isLoggedIn changes
+  
+  tryLogin();
 
   return (
     <NavigationContainer>
@@ -165,4 +190,3 @@ const AppNavigator = () => {
 }
 
 export default AppNavigator;
-

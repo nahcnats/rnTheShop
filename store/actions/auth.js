@@ -1,4 +1,5 @@
 // Import libraries
+import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 
 // Import constants
@@ -20,7 +21,19 @@ export const signup = (email, password) => {
 
       const resData = await response.data;
 
-      dispatch({ type: SIGNUP, token: resData.idToken, userId: resData.localId });
+      const expirationDate = new Date(
+        new Date().getTime() + parseInt(resData.expiresIn) * 1000
+      );
+
+      dispatch({
+        type: SIGNUP,
+        token: resData.idToken,
+        userId: resData.localId,
+        expiryDate: expirationDate
+      });
+
+      // For persistent authentication
+      saveDataToStorage(resData.idToken, resData.localId, expirationDate);
     } catch (err) {
       const errorId = err.response.data.error.message;
       let message = 'Something went wrong!';
@@ -47,7 +60,18 @@ export const login = (email, password) => {
 
       const resData = await response.data;
 
-      dispatch({ type: LOGIN, token: resData.idToken, userId: resData.localId, loggedIn: true });
+      const expirationDate = new Date(
+        new Date().getTime() + parseInt(resData.expiresIn) * 1000
+      );
+
+      dispatch({
+        type: LOGIN,
+        token: resData.idToken,
+        userId: resData.localId,
+        expiryDate: expirationDate
+      });
+      
+      saveDataToStorage(resData.idToken, resData.localId, expirationDate);
     } catch (err) {
       const errorId = err.response.data.error.message;
       let message = 'Something went wrong!';
@@ -61,4 +85,12 @@ export const login = (email, password) => {
       throw new Error(message);
     }
   };
+}
+
+const saveDataToStorage = (token, userId, expirationDate) => {
+  AsyncStorage.setItem('userData', JSON.stringify({
+    token: token,
+    userId: userId,
+    expiryDate: expirationDate.toISOString()
+  }));
 }

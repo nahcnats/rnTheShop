@@ -1,19 +1,19 @@
 import { LOGIN, SIGNUP } from '../actions/auth';
 
 const initialState = {
-  loggedIn: false,
   token: null,
-  userId: null
+  userId: null,
+  expiryDate: null
 }
 
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
-    case LOGIN: {
+    case LOGIN: {      
       return {
         ...state,
-        loggedIn: action.loggedIn,
         token: action.token,
-        userId: action.userId
+        userId: action.userId,
+        expiryDate: action.expirationDate,
       }
     }
     // case LOGOUT: {
