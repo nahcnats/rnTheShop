@@ -9,7 +9,6 @@ npm-debug.*
 *.orig.*
 web-build/
 constants/API.js
-constants/API copy.js
 
 # macOS
 .DS_Store
