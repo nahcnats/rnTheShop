@@ -1,6 +1,6 @@
 // Import libraries
-import React, { useEffect, useState, useCallback } from 'react';
-import { NavigationContainer, DrawerActions } from '@react-navigation/native';
+import React, { useEffect, useCallback } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import {
   createDrawerNavigator,
@@ -116,7 +116,7 @@ const AuthNavigator = () => {
   )
 }
 
-const CustomDrawerContent = ({ navigation, ...props }) => {
+const CustomDrawerContent = (props) => {
   const dispatch = useDispatch();
 
   return (
@@ -126,7 +126,7 @@ const CustomDrawerContent = ({ navigation, ...props }) => {
           <DrawerItem
             label='Logout'
             onPress={() => {
-              navigation.dispatch(DrawerActions.closeDrawer());
+              props.navigation.closeDrawer();
               dispatch(authActions.logout());
              }}
             icon={drawerConfig => <Ionicons

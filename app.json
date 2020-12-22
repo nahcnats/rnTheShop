@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "theshop",
-    "slug": "theshop",
+    "name": "sctheshop",
+    "slug": "sctheshop",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -27,6 +27,7 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "This is a simple shopping app I develop based on an online course I bought. However, it's not copy & paste nor I coded it blindly. The tutorial was instructed with some older version libraries, namely React Navigation. Because I'm using the latest version (React Navigation 5), I had to code it differently. It's good experience. I get to learn some best practices from the course too."
   }
 }
