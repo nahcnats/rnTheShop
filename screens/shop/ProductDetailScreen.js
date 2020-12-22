@@ -25,7 +25,10 @@ const ProductDetailScreen = ({ navigation, ...props }) => {
     navigation.setOptions({
       headerTitle: productTitle
     });
-
+    
+    return () => {
+      // unmount
+    }
   }, [navigation]); // Excute when navigation invoke
 
   return (

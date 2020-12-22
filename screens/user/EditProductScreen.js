@@ -70,7 +70,11 @@ const EditProductScreen = ({ navigation, ...props }) => {
         )
       },
     });
-  });
+
+    return () => {
+      // unmount
+    }
+  }, [navigation]);
 
   useEffect(() => {
     if (error) {

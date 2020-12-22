@@ -1,34 +1,21 @@
-import { LOGIN, SIGNUP } from '../actions/auth';
+import { AUTHENTICATE, LOGOUT } from '../actions/auth';
 
 const initialState = {
   token: null,
-  userId: null,
-  expiryDate: null
+  userId: null
 }
 
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
-    case LOGIN: {      
-      return {
-        ...state,
-        token: action.token,
-        userId: action.userId,
-        expiryDate: action.expirationDate,
-      }
-    }
-    // case LOGOUT: {
-    //   return {
-    //     ...state,
-    //     loggedIn: action.trueFalse,
-    //     token: null
-    //   }
-    // }
-    case SIGNUP: {
+    case AUTHENTICATE: {      
       return {
         ...state,
         token: action.token,
         userId: action.userId
       }
+    }
+    case LOGOUT: {
+      return initialState;
     }
     default:
       return state;

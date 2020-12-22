@@ -53,6 +53,9 @@ const CartScreen = ({ navigation, ...props }) => {
       headerTitle: 'Your Cart'
     });
 
+    return () => {
+      // unmount
+    }
   }, [navigation]); // Excute when navigation invoke
 
   const sendOrderHandler = async () => {

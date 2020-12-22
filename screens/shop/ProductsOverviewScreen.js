@@ -64,6 +64,9 @@ const ProductsOverviewScreen = ({ navigation, ...props }) => {
       ),
     });
 
+    return () => {
+      // unmount
+    }
   }, [navigation]); // Excute when navigation invoke
 
   const loadProducts = useCallback(async () => {
@@ -84,7 +87,9 @@ const ProductsOverviewScreen = ({ navigation, ...props }) => {
     const unsubscribe = navigation.addListener('focus', loadProducts);
 
     // Clean up. Remove listener
-    return unsubscribe;
+    return () => {
+      unsubscribe
+    };
   }, [loadProducts]);
 
   // Fetch initially

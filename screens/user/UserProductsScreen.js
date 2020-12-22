@@ -48,6 +48,9 @@ const UserProductsScreen = ({navigation, ...props}) => {
       ),
     });
 
+    return () => {
+      // unmount
+    }
   }, [navigation]); // Excute once
 
   const editProductHandler = (id) => {

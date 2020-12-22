@@ -1,12 +1,28 @@
 // Import libraries
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
+import { LogBox } from 'react-native';
 
 // Import constants
 import API from '../../constants/API';
 
-export const SIGNUP = 'SIGNUP';
-export const LOGIN = 'LOGIN';
+// export const SIGNUP = 'SIGNUP';
+// export const LOGIN = 'LOGIN';
+export const AUTHENTICATE = 'AUTHENTICATE';
+export const LOGOUT = 'LOGOUT';
+
+let timer;
+LogBox.ignoreLogs([
+  "Setting a timer for a long period of time", 
+  // name of the error/warning here, or a regex here
+]);
+
+export const authenticate = (userId, token, expiryTime) => {
+  return dispatch => {
+    dispatch(setLogoutTimer(expiryTime));
+    dispatch({ type: AUTHENTICATE, userId: userId, token: token });
+  }
+}
 
 export const signup = (email, password) => {
   return async dispatch => {
@@ -25,12 +41,11 @@ export const signup = (email, password) => {
         new Date().getTime() + parseInt(resData.expiresIn) * 1000
       );
 
-      dispatch({
-        type: SIGNUP,
-        token: resData.idToken,
-        userId: resData.localId,
-        expiryDate: expirationDate
-      });
+      dispatch(authenticate(
+        resData.localId,
+        resData.idToken,
+        parseInt(resData.expiresIn) * 1000
+      ));
 
       // For persistent authentication
       saveDataToStorage(resData.idToken, resData.localId, expirationDate);
@@ -64,15 +79,15 @@ export const login = (email, password) => {
         new Date().getTime() + parseInt(resData.expiresIn) * 1000
       );
 
-      dispatch({
-        type: LOGIN,
-        token: resData.idToken,
-        userId: resData.localId,
-        expiryDate: expirationDate
-      });
+      dispatch(authenticate(
+        resData.localId,
+        resData.idToken,
+        parseInt(resData.expiresIn) * 1000
+      ));
       
       saveDataToStorage(resData.idToken, resData.localId, expirationDate);
     } catch (err) {
+      console.log('action login catch')
       const errorId = err.response.data.error.message;
       let message = 'Something went wrong!';
 
@@ -85,6 +100,26 @@ export const login = (email, password) => {
       throw new Error(message);
     }
   };
+}
+
+export const logout = () => {
+  clearLogoutTimer();
+  AsyncStorage.removeItem('userData');
+  return { type: LOGOUT };
+}
+
+const clearLogoutTimer = () => {
+  if (timer) {
+    clearTimeout(timer);
+  }
+}
+
+const setLogoutTimer = (expirationTime) => {
+  return dispatch => {
+    timer = setTimeout(() => {
+      dispatch(logout());
+    }, expirationTime);
+  }
 }
 
 const saveDataToStorage = (token, userId, expirationDate) => {

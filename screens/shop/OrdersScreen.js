@@ -54,6 +54,9 @@ const OrdersScreen = ({ navigation, ...props }) => {
       ),
     });
 
+    return () => {
+      // unmount
+    }
   }, [navigation]); // Excute when navigation invoke
 
   const loadOrders = useCallback(async () => {

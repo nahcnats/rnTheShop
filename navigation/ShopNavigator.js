@@ -1,11 +1,16 @@
 // Import libraries
 import React, { useEffect, useState, useCallback } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DrawerActions } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { Platform } from 'react-native';
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem,} from '@react-navigation/drawer';
+import { View, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-community/async-storage';
+import { useDispatch, useSelector } from 'react-redux';
 
 // Import screens
 import ProductsOverviewScreen from '../screens/shop/ProductsOverviewScreen';
@@ -19,6 +24,8 @@ import AuthScreen from '../screens/user/AuthScreen';
 // Import constants
 import Colors from '../constants/Colors';
 
+// Import actions
+import * as authActions from '../store/actions/auth';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -109,6 +116,30 @@ const AuthNavigator = () => {
   )
 }
 
+const CustomDrawerContent = ({ navigation, ...props }) => {
+  const dispatch = useDispatch();
+
+  return (
+    <View style={{ flex: 1 }}>
+        <DrawerContentScrollView {...props} >
+          <DrawerItemList {...props} />
+          <DrawerItem
+            label='Logout'
+            onPress={() => {
+              navigation.dispatch(DrawerActions.closeDrawer());
+              dispatch(authActions.logout());
+             }}
+            icon={drawerConfig => <Ionicons
+                name={Platform.OS === 'android' ? 'md-log-out' : 'ios-log-out'}
+                size={23}
+                color={drawerConfig.activeTintColor}
+              />}
+          />
+        </DrawerContentScrollView>
+    </View>
+  )
+}
+
 const ShopNavigator = () => {
   return (
     <Drawer.Navigator
@@ -116,6 +147,7 @@ const ShopNavigator = () => {
       drawerContentOptions={{
         activeTintColor: Colors.primary
       }}
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
       <Drawer.Screen
         name="Products"
@@ -155,14 +187,25 @@ const ShopNavigator = () => {
 }
 
 const AppNavigator = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // !! force it to be true / false
+  const isAuth = useSelector(state => !!state.auth.token);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    tryLogin();
+
+    return () => {
+      // unmount
+    }
+  }, [tryLogin]);
 
   /* 
     For persistence authentication.
     AppNavigator cannot be set as async.
     Hence, need to wrap async function for tryLogin as callback to avoid infinate loop.
   */
-  const tryLogin = useCallback( async () => {
+  const tryLogin = useCallback(async () => {
     const userData = await AsyncStorage.getItem('userData');
 
     // If no userData, return. Hence, isLoggedIn is still false
@@ -172,19 +215,22 @@ const AppNavigator = () => {
 
     // AsyncStorage values are string. Covert string to JSON
     const transformedData = JSON.parse(userData);
+    const { token, userId, expiryDate } = transformedData;
+    const expirationDate = new Date(expiryDate);
 
-    if (transformedData.expiryDate >= new Date() || transformedData.token || transformedData.userId) {
-      setIsLoggedIn(true);
+    if (expirationDate <= new Date() || !token || !userId) {
+      dispatch(authActions.logout());
+      return;
     }
 
-    return; // Stop processing, return to original state. Hence, isLoggedIn is still false
-  }, [isLoggedIn]); // Execute whenever isLoggedIn changes
-  
-  tryLogin();
+    const expirationTime = expirationDate.getTime() - new Date().getTime();
+    dispatch(authActions.authenticate(userId, token, expirationTime));
+
+  }, [isAuth]); // Execute whenever isAuth changes
 
   return (
     <NavigationContainer>
-      {isLoggedIn ? <ShopNavigator /> : <AuthNavigator />}
+      {isAuth ? <ShopNavigator /> : <AuthNavigator />}
     </NavigationContainer>
   )
 }
