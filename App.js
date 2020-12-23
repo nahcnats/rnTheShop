@@ -15,7 +15,7 @@ import ordersReducer from './store/reducers/orders';
 import authReducer from './store/reducers/auth';
 
 // Import navigation
-import ShopNavigator from './navigation/ShopNavigator'
+import ShopNavigation from './navigation/ShopNavigation'
 
 const rootReducer = combineReducers({
   products: productsReducer,
@@ -52,7 +52,7 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <ShopNavigator />
+      <ShopNavigation />
     </Provider>   
   );
 }

@@ -186,7 +186,7 @@ const ShopNavigator = () => {
   );
 }
 
-const AppNavigator = () => {
+const ShopNavigation = () => {
   // !! force it to be true / false
   const isAuth = useSelector(state => !!state.auth.token);
 
@@ -235,4 +235,4 @@ const AppNavigator = () => {
   )
 }
 
-export default AppNavigator;
+export default ShopNavigation;
