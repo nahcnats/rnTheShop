@@ -13,13 +13,13 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { useDispatch, useSelector } from 'react-redux';
 
 // Import screens
-import ProductsOverviewScreen from '../screens/shop/ProductsOverviewScreen';
-import ProductDetailScreen from '../screens/shop/ProductDetailScreen';
-import CartScreen from '../screens/shop/CartScreen';
-import OrdersScreen from '../screens/shop/OrdersScreen';
-import UserProductsScreen from '../screens/user/UserProductsScreen';
-import EditProductScreen from '../screens/user/EditProductScreen';
-import AuthScreen from '../screens/user/AuthScreen';
+import ProductsOverviewScreen, { productsOverviewScreenOptions } from '../screens/shop/ProductsOverviewScreen';
+import ProductDetailScreen, { productDetailScreenOptions } from '../screens/shop/ProductDetailScreen';
+import CartScreen, { cartScreenOptions } from '../screens/shop/CartScreen';
+import OrdersScreen, { ordersScreenOptions } from '../screens/shop/OrdersScreen';
+import UserProductsScreen, { userProductsScreenOptions } from '../screens/user/UserProductsScreen';
+import EditProductScreen, { editProductScreenOptions } from '../screens/user/EditProductScreen';
+import AuthScreen, { authScreenOptions } from '../screens/user/AuthScreen';
 
 // Import constants
 import Colors from '../constants/Colors';
@@ -52,18 +52,17 @@ const ProductsNavigator = () => {
       <Stack.Screen
         name='ProductsOverviewScreen'
         component={ProductsOverviewScreen}
+        options={productsOverviewScreenOptions}
       />
       <Stack.Screen
         name='ProductDetailScreen'
         component={ProductDetailScreen}
+        options={productDetailScreenOptions}
       />
       <Stack.Screen
         name='CartScreen'
         component={CartScreen}
-      />
-      <Stack.Screen
-        name='OrdersScreen'
-        component={OrdersScreen}
+        options={cartScreenOptions}
       />
     </Stack.Navigator>
   );
@@ -78,6 +77,7 @@ const OrdersNavigator = () => {
       <Stack.Screen
         name='OrdersScreen'
         component={OrdersScreen}
+        options={ordersScreenOptions}
       />
     </Stack.Navigator>
   );
@@ -92,10 +92,12 @@ const AdminNavigator = () => {
       <Stack.Screen
         name='UserProductsScreen'
         component={UserProductsScreen}
+        options={userProductsScreenOptions}
       />
       <Stack.Screen
         name='EditProductScreen'
         component={EditProductScreen}
+        options={editProductScreenOptions}
       />
     </Stack.Navigator>
   );
@@ -110,6 +112,7 @@ const AuthNavigator = () => {
       <Stack.Screen
         name="AuthScreen"
         component={AuthScreen}
+        options={authScreenOptions}
       />
 
     </Stack.Navigator>

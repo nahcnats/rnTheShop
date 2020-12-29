@@ -1,6 +1,5 @@
 // Import libraries
 import React, {
-  useLayoutEffect,
   useReducer,
   useCallback,
   useState,
@@ -32,18 +31,11 @@ import {FORM_INPUT_UPDATE} from '../../constants/actionType';
 // Import actions
 import * as authActions from '../../store/actions/auth';
 
-const AuthScreen = ({ navigation, ...props }) => {
+const AuthScreen = props => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
   const dispatch = useDispatch();
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTitle: 'Authenticate'
-    });
-
-  }, [navigation]); // Excute once
 
   useEffect(() => {
     if (error) {
@@ -148,6 +140,10 @@ const AuthScreen = ({ navigation, ...props }) => {
       </LinearGradient>
     </KeyboardAvoidingView>
   );
+}
+
+export const authScreenOptions = {
+  headerTitle: 'Authenticate'
 }
 
 const styles = StyleSheet.create({

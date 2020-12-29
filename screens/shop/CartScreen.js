@@ -1,5 +1,5 @@
 // Import libraries
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Text,
   View,
@@ -21,7 +21,7 @@ import Card from '../../components/UI/Card';
 import * as cartActions from '../../store/actions/cart';
 import * as ordersAction from '../../store/actions/orders';
 
-const CartScreen = ({ navigation, ...props }) => {
+const CartScreen = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
   const cartTotalAmount = useSelector(state => state.cart.totalAmount);
@@ -42,21 +42,6 @@ const CartScreen = ({ navigation, ...props }) => {
   });
 
   const dispatch = useDispatch();
-
-  // useLayoutEffect to do repaint layout related changes. Keep it separate from useEffect
-  // for state changes.
-  useLayoutEffect(() => {
-    // Mount CartScreen
-
-    // Dynamically set the title header
-    navigation.setOptions({
-      headerTitle: 'Your Cart'
-    });
-
-    return () => {
-      // unmount
-    }
-  }, [navigation]); // Excute when navigation invoke
 
   const sendOrderHandler = async () => {
     setIsLoading(true);
@@ -96,6 +81,10 @@ const CartScreen = ({ navigation, ...props }) => {
       />
     </View>
   );
+}
+
+export const cartScreenOptions = {
+    headerTitle: 'Your Cart'
 }
 
 const styles = StyleSheet.create({

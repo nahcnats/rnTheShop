@@ -1,5 +1,5 @@
 // Import libraries
-import React, { useLayoutEffect } from 'react';
+import React from 'react';
 import { Text, View, StyleSheet, ScrollView, Image, Button } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -9,27 +9,12 @@ import Colors from '../../constants/Colors';
 // Import redux actions
 import * as cartActions from '../../store/actions/cart';
 
-const ProductDetailScreen = ({ navigation, ...props }) => {
-  const { productId, productTitle } = props.route.params;
+const ProductDetailScreen = props => {
+  const { productId  } = props.route.params;
   // state.products from app.combinedReducers
   const selectedProduct = useSelector(
     state => state.products.availableProducts.find(prod => prod.id === productId));
   const dispatch = useDispatch();
-
-  // useLayoutEffect to do repaint layout related changes. Keep it separate from useEffect
-  // for state changes.
-  useLayoutEffect(() => {
-    // Mount ProductDetailScreen
-
-    // Dynamically set the title header
-    navigation.setOptions({
-      headerTitle: productTitle
-    });
-    
-    return () => {
-      // unmount
-    }
-  }, [navigation]); // Excute when navigation invoke
 
   return (
     <ScrollView>
@@ -43,6 +28,14 @@ const ProductDetailScreen = ({ navigation, ...props }) => {
       <Text style={styles.description}>{ selectedProduct.description }</Text>
     </ScrollView>
   ); 
+}
+
+export const productDetailScreenOptions = navData => {
+  const { productTitle } = navData.route.params;
+
+  return {
+    headerTitle: productTitle
+  }
 }
 
 const styles = StyleSheet.create({

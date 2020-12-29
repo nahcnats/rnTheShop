@@ -1,6 +1,5 @@
 // Import libraries
 import React, {
-  useLayoutEffect,
   useEffect,
   useState,
   useCallback
@@ -27,37 +26,13 @@ import Colors from '../../constants/Colors';
 // Import actions
 import * as ordersActions from '../../store/actions/orders';
 
-const OrdersScreen = ({ navigation, ...props }) => {
+const OrdersScreen = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
   // state.orders from app.combinedReducers
   const orders = useSelector(state => state.order.orders);
 
   const dispatch = useDispatch();
-
-  // useLayoutEffect to do repaint layout related changes. Keep it separate from useEffect
-  // for state changes.
-  useLayoutEffect(() => {
-    // Mount OrdersScreen
-
-    // Dynamically set the title header
-    navigation.setOptions({
-      headerTitle: 'Your Orders',
-      headerLeft: () => (
-        <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-          <Item
-            title='Menu'
-            iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'}
-            onPress={() => {navigation.toggleDrawer()}}
-          />
-        </HeaderButtons>
-      ),
-    });
-
-    return () => {
-      // unmount
-    }
-  }, [navigation]); // Excute when navigation invoke
 
   const loadOrders = useCallback(async () => {
     setError(null);
@@ -75,7 +50,7 @@ const OrdersScreen = ({ navigation, ...props }) => {
   // Invoke when this page is refocused i.e navigate back to this screen from 
   // another screen
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', loadOrders);
+    const unsubscribe = props.navigation.addListener('focus', loadOrders);
 
     // Clean up. Remove listener
     return unsubscribe;
@@ -112,6 +87,21 @@ const OrdersScreen = ({ navigation, ...props }) => {
       items={itemData.item.items}
     />}
   />;
+}
+
+export const ordersScreenOptions = navData => {
+  return {
+      headerTitle: 'Your Orders',
+      headerLeft: () => (
+        <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+          <Item
+            title='Menu'
+            iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'}
+            onPress={() => {navData.navigation.toggleDrawer()}}
+          />
+        </HeaderButtons>
+      ),
+    }
 }
 
 const styles = StyleSheet.create({

@@ -1,5 +1,5 @@
 // Import libraries
-import React, { useLayoutEffect, useCallback, useReducer, useState, useEffect } from 'react';
+import React, { useCallback, useReducer, useState, useEffect } from 'react';
 import {
   View,
   ScrollView,
@@ -25,7 +25,7 @@ import {FORM_INPUT_UPDATE} from '../../constants/actionType';
 // Import actions
 import * as productActions from '../../store/actions/products';
 
-const EditProductScreen = ({ navigation, ...props }) => {
+const EditProductScreen = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
   const { prodId } = props.route.params;
@@ -51,30 +51,6 @@ const EditProductScreen = ({ navigation, ...props }) => {
     },
     formIsValid: editedProduct ? true : false
   });
-
-  // useLayoutEffect to do repaint layout related changes. Keep it separate from useEffect
-  // for state changes.
-  useLayoutEffect(() => {
-    // Dynamically set the title header
-    navigation.setOptions({
-      headerTitle: prodId ? 'Edit Product' : 'Add Product',
-      headerRight: () => {
-        return (
-          <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-            <Item
-              title='Add'
-              iconName={Platform.OS === 'android' ? 'md-checkmark' : 'ios-checkmark'}
-              onPress={submitHandler}
-            />
-          </HeaderButtons>
-        )
-      },
-    });
-
-    return () => {
-      // unmount
-    }
-  }, [navigation]);
 
   useEffect(() => {
     if (error) {
@@ -124,13 +100,29 @@ const EditProductScreen = ({ navigation, ...props }) => {
         );
       }
 
-      navigation.goBack();
+      props.navigation.goBack();
     } catch (err) {
       setError(err.message);
     }
     
     setIsLoading(false);
   }, [dispatch, prodId, formState]); // Invoke only if prodId, title, decriptions, imageUrl, price changes
+
+  useEffect(() => { 
+    props.navigation.setOptions({
+      headerRight: () => {
+        return (
+          <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+            <Item
+              title='Add'
+              iconName={Platform.OS === 'android' ? 'md-checkmark' : 'ios-checkmark'}
+              onPress={submitHandler}
+            />
+          </HeaderButtons>
+        )
+      },
+    })
+  }, [submitHandler])
 
   if (isLoading) {
     return <Loading />
@@ -202,6 +194,13 @@ const EditProductScreen = ({ navigation, ...props }) => {
       </ScrollView>
     </KeyboardAvoidingView>
   );
+}
+
+export const editProductScreenOptions = navData => {
+  const routeParams = navData.route.params ? navData.route.params : {};
+  return {
+    headerTitle: routeParams.prodId ? 'Edit Product' : 'Add Product',
+  }
 }
 
 const styles = StyleSheet.create({

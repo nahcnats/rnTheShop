@@ -1,6 +1,5 @@
 // Import libraries
 import React, {
-  useLayoutEffect,
   useEffect,
   useState,
   useCallback
@@ -28,46 +27,13 @@ import Colors from '../../constants/Colors';
 import * as cartActions from '../../store/actions/cart';
 import * as productsActions from '../../store/actions/products';
 
-const ProductsOverviewScreen = ({ navigation, ...props }) => {
+const ProductsOverviewScreen = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState();
   // state.products from app.combinedReducers
   const products = useSelector(state => state.products.availableProducts);
   const dispatch = useDispatch();
-
-  // useLayoutEffect to do repaint layout related changes. Keep it separate from useEffect
-  // for state changes.
-  useLayoutEffect(() => {
-    // Mount ProductOverviewScreen
-
-    // Dynamically set the title header
-    navigation.setOptions({
-      headerTitle: 'All Products',
-      headerLeft: () => (
-        <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-          <Item
-            title='Menu'
-            iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'}
-            onPress={() => {navigation.toggleDrawer()}}
-          />
-        </HeaderButtons>
-      ),
-      headerRight: () => (
-        <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-          <Item
-            title='Cart'
-            iconName={Platform.OS === 'android' ? 'md-cart' : 'ios-cart'}
-            onPress={() => {navigation.navigate('CartScreen')}}
-          />
-        </HeaderButtons>
-      ),
-    });
-
-    return () => {
-      // unmount
-    }
-  }, [navigation]); // Excute when navigation invoke
 
   const loadProducts = useCallback(async () => {
     setError(null);
@@ -84,7 +50,7 @@ const ProductsOverviewScreen = ({ navigation, ...props }) => {
   // Invoke when this page is refocused i.e navigate back to this screen from 
   // another screen
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', loadProducts);
+    const unsubscribe = props.navigation.addListener('focus', loadProducts);
 
     // Clean up. Remove listener
     return () => {
@@ -100,7 +66,7 @@ const ProductsOverviewScreen = ({ navigation, ...props }) => {
   }, [dispatch, loadProducts]); // Invoke only when dispatch & loadProducts is called
 
   const selectItemHandler = (id, title) => {
-    navigation.navigate('ProductDetailScreen', {
+    props.navigation.navigate('ProductDetailScreen', {
       productId: id,
       productTitle: title
     })
@@ -145,6 +111,30 @@ const ProductsOverviewScreen = ({ navigation, ...props }) => {
         }} />
       </ProductItem>}
   />
+}
+
+export const productsOverviewScreenOptions = navData => {
+  return {
+    headerTitle: 'All Products',
+    headerLeft: () => (
+      <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+        <Item
+          title='Menu'
+          iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'}
+          onPress={() => {navData.navigation.toggleDrawer()}}
+        />
+      </HeaderButtons>
+    ),
+    headerRight: () => (
+      <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+        <Item
+          title='Cart'
+          iconName={Platform.OS === 'android' ? 'md-cart' : 'ios-cart'}
+          onPress={() => {navData.navigation.navigate('CartScreen')}}
+        />
+      </HeaderButtons>
+    ),
+  }
 }
 
 const styles = StyleSheet.create({

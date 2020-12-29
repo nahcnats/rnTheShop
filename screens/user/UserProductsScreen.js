@@ -1,5 +1,5 @@
 // Import libraries
-import React, { useLayoutEffect } from 'react';
+import React from 'react';
 import { View, Text, FlatList, Platform, Button, Alert } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
@@ -17,41 +17,6 @@ import * as productsActions from '../../store/actions/products';
 const UserProductsScreen = ({navigation, ...props}) => {
   const userProducts = useSelector(state => state.products.userProducts);
   const dispatch = useDispatch();
-
-  // useLayoutEffect to do repaint layout related changes. Keep it separate from useEffect
-  // for state changes.
-  useLayoutEffect(() => {
-    // Mount UserProductsScreen
-
-    // Dynamically set the title header
-    navigation.setOptions({
-      headerTitle: 'Your Products',
-      headerLeft: () => (
-        <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-          <Item
-            title='Menu'
-            iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'}
-            onPress={() => {navigation.toggleDrawer()}}
-          />
-        </HeaderButtons>
-      ),
-      headerRight: () => (
-        <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-          <Item
-            title='Add'
-            iconName={Platform.OS === 'android' ? 'md-create' : 'ios-create'}
-            onPress={() => {
-              navigation.navigate('EditProductScreen', { prodId: null });
-            }}
-          />
-        </HeaderButtons>
-      ),
-    });
-
-    return () => {
-      // unmount
-    }
-  }, [navigation]); // Excute once
 
   const editProductHandler = (id) => {
     navigation.navigate('EditProductScreen', {prodId: id});
@@ -98,6 +63,32 @@ const UserProductsScreen = ({navigation, ...props}) => {
       }
     />
   );
+}
+
+export const userProductsScreenOptions = navData => {
+  return {
+    headerTitle: 'Your Products',
+    headerLeft: () => (
+      <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+        <Item
+          title='Menu'
+          iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'}
+          onPress={() => {navData.navigation.toggleDrawer()}}
+        />
+      </HeaderButtons>
+    ),
+    headerRight: () => (
+      <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+        <Item
+          title='Add'
+          iconName={Platform.OS === 'android' ? 'md-create' : 'ios-create'}
+          onPress={() => {
+            navData.navigation.navigate('EditProductScreen', { prodId: null });
+          }}
+        />
+      </HeaderButtons>
+    ),
+  }
 }
 
 export default UserProductsScreen;
