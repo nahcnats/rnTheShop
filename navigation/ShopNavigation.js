@@ -192,6 +192,7 @@ const ShopNavigator = () => {
 const ShopNavigation = () => {
   // !! force it to be true / false
   const isAuth = useSelector(state => !!state.auth.token);
+  console.log('isAuth', isAuth);
 
   const dispatch = useDispatch();
 
