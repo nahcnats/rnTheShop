@@ -2,7 +2,7 @@
 
 This is a simple shopping app I developed for fun to try out React Native Expo.
 
-Please [contact me](mailto:nahcnats@gmail.com) if you want to try the demo as I use Google's services for this [app](https://expo.io/@nahcnats/projects/sctheshop). 
+Please [contact me](mailto:nahcnats@gmail.com) if you want to try the demo for this [app](https://expo.io/@nahcnats/projects/sctheshop). 
 
 ### Screenshots
 
