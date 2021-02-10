@@ -5,6 +5,7 @@ import ReduxThunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import AppLoading from 'expo-app-loading';
 import * as Font from 'expo-font';
+import * as Notifications from 'expo-notifications';
 // import { composeWithDevTools } from 'redux-devtools-extension';
 
 
@@ -16,6 +17,12 @@ import authReducer from './store/reducers/auth';
 
 // Import navigation
 import ShopNavigation from './navigation/ShopNavigation'
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => {
+    return { shouldShowAlert: true };
+  }
+});
 
 const rootReducer = combineReducers({
   products: productsReducer,

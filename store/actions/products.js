@@ -1,5 +1,7 @@
 // Import libraries
 import axios from 'axios';
+import * as Notifications from 'expo-notifications';
+import * as Permissions from 'expo-permissions';
 
 // Import models
 import Product from '../../models/product';
@@ -31,6 +33,7 @@ export const fetchProducts = () => {
         loadedProducts.push(new Product(
           key,
           resData[key].ownerId,
+          resData[key].ownerPushToken,
           resData[key].title,
           resData[key].imageUrl,
           resData[key].description,
@@ -70,6 +73,19 @@ export const deleteProduct = productId => {
 
 export const createProduct = (title, description, imageUrl, price) => {
   return async (dispatch, getState) => {
+    let pushToken;
+
+    let statusObj = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+    if (statusObj.status !== 'granted') {
+      statusObj = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+    }  
+    
+    if (statusObj.status !== 'granted') {
+      pushToken = null;  
+    } else {
+      pushToken = (await Notifications.getExpoPushTokenAsync()).data;
+    }
+
     const token = getState().auth.token;
     const userId = getState().auth.userId;
 
@@ -78,7 +94,8 @@ export const createProduct = (title, description, imageUrl, price) => {
       description,
       imageUrl,
       price,
-      ownerId: userId
+      ownerId: userId,
+      ownerPushToken: pushToken
     };
 
     const response = await axios.post(`${API.apiUrl}/products.json?auth=${token}`,
@@ -96,7 +113,8 @@ export const createProduct = (title, description, imageUrl, price) => {
         description,
         imageUrl,
         price,
-        ownerId: userId
+        ownerId: userId,
+        pushToken: pushToken,
       }
     });  
   }
